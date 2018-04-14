@@ -1,0 +1,22 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "es6": true,
+    "browser": false,
+    "node": true
+  },
+  "extends": ["prettier", "eslint:recommended"],
+  "plugins": ["prettier"],
+  "rules": {
+    "no-console": ["warn"],
+    "indent": ["warn", "tab"],
+    "linebreak-style": ["warn", "unix"],
+    "quotes": ["warn", "single"],
+    "semi": ["warn", "always"],
+    "object-curly-spacing": ["error", "always"],
+    "no-unused-vars": [
+      "warn",
+      {"vars": "all", "args": "after-used", "ignoreRestSiblings": false}
+    ]
+  }
+}
