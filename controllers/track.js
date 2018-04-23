@@ -4,7 +4,7 @@ import transliter from 'translitit-cyrillic-russian-to-latin';
 import Track from '../models/track';
 
 // TODO: Добавить новый трек
-export const addTrack = async (req, res, next) => {
+export const addTrack = async (req, res) => {
 	const host = req.headers.host;
 	const product = new Track({
 		_id: new mongoose.Types.ObjectId(),
@@ -54,7 +54,7 @@ export const getTrack = async (req, res) => {
 // TODO: Удалить трек по id
 export const deleteTrack = async (req, res) => {
 	try {
-		const deletedTrack = await Track.remove({ _id: req.params.id });
+		await Track.remove({ _id: req.params.id });
 		res.status(200).json({
 			message: 'Track deleted'
 		});
@@ -65,18 +65,15 @@ export const deleteTrack = async (req, res) => {
 
 // TODO: Изменить трек
 export const editTrack = async (req, res) => {
-	const updateProps = {};
-
-	for (let prop of req.body) {
-		updateProps[prop.propName] = prop.value;
-	}
-
-	const track = await Track.update(
-		{ _id: req.params.id },
-		{ $set: updateProps }
-	);
-
 	try {
+		const updateProps = {};
+
+		for (let prop of req.body) {
+			updateProps[prop.propName] = prop.value;
+		}
+
+		await Track.update({ _id: req.params.id }, { $set: updateProps });
+
 		res.status(200).json({
 			message: 'Track updated'
 		});

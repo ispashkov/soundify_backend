@@ -2,6 +2,7 @@ import { Router } from 'express';
 import upath from 'upath';
 import multer from 'multer';
 import transliter from 'translitit-cyrillic-russian-to-latin';
+import passport from 'passport';
 
 const router = new Router();
 
@@ -25,7 +26,7 @@ import {
 } from '../controllers/track';
 
 router.post('/', upload.single('photo'), addTrack); // TODO: Добавить новый трек
-router.get('/', getAllTracks); // TODO: Пролучить все треки
+router.get('/', passport.authenticate('jwt', { session: false }), getAllTracks); // TODO: Пролучить все треки
 router.put('/:id', editTrack); // TODO: Изменить трек
 router.get('/:id', getTrack); // TODO: Получить трек по id
 router.delete('/:id', deleteTrack); // TODO: Удалить трек по id
