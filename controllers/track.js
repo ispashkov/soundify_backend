@@ -28,9 +28,9 @@ export const addTrack = async (req, res) => {
 
 // TODO: Пролучить все треки
 export const getAllTracks = async (req, res) => {
-	const tracks = await Track.find();
-
 	try {
+		const tracks = await Track.find();
+
 		res.status(200).json({
 			count: tracks.length,
 			tracks
