@@ -4,6 +4,11 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user';
 
+/**
+ * Registration
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const userSignup = (req, res) => {
 	const { email, password } = req.body;
 
@@ -43,6 +48,11 @@ export const userSignup = (req, res) => {
 	});
 };
 
+/**
+ * Login
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const userLogin = async (req, res) => {
 	const { email, password } = req.body;
 
@@ -93,6 +103,11 @@ export const userLogin = async (req, res) => {
 	}
 };
 
+/**
+ * Delete user
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const userDelete = async (req, res) => {
 	try {
 		User.remove({ id: req.params.id });
@@ -106,6 +121,11 @@ export const userDelete = async (req, res) => {
 	}
 };
 
+/**
+ * Get current user
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const userCurrent = (req, res) => {
 	res.json({
 		id: req.user._id,

@@ -16,14 +16,12 @@ dotenv.config();
 
 mongoose
 	.connect(
-		`mongodb://ispashkov:${
-			process.env.MONGODB_PSWD
-		}@cluster0-shard-00-00-tzgob.mongodb.net:27017,cluster0-shard-00-01-tzgob.mongodb.net:27017,cluster0-shard-00-02-tzgob.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`,
+		`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PSWD}@ds018708.mlab.com:18708/soundify`,
 		{
 			useMongoClient: true
 		}
 	)
-	.on('error', error => console.log('Connection Error!', error));
+	.on('error', error => console.log('Connection Error!', error)); 
 
 mongoose.Promise = global.Promise;
 

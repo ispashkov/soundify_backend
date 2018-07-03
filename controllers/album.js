@@ -3,7 +3,11 @@ import transliter from 'translitit-cyrillic-russian-to-latin';
 
 import Album from '../models/album';
 
-// TODO: Добавить новый альбом
+/**
+ * Create new album
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const createAlbum = async (req, res) => {
 	const host = req.headers.host;
 	const album = new Album({
@@ -26,7 +30,11 @@ export const createAlbum = async (req, res) => {
 	}
 };
 
-// TODO: Получить все альбомы
+/**
+ * Get all albums
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const getAlbums = async (req, res) => {
 	const albums = await Album.find();
 

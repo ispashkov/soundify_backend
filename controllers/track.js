@@ -3,10 +3,14 @@ import transliter from 'translitit-cyrillic-russian-to-latin';
 
 import Track from '../models/track';
 
-// TODO: Добавить новый трек
+/**
+ * Create new track
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const addTrack = async (req, res) => {
 	const host = req.headers.host;
-	const product = new Track({
+	const track = new Track({
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
 		artist: req.body.artist,
@@ -15,7 +19,7 @@ export const addTrack = async (req, res) => {
 	});
 
 	try {
-		const response = await product.save();
+		const response = await track.save();
 
 		res.status(200).json({
 			message: 'New track has been added',
@@ -26,7 +30,11 @@ export const addTrack = async (req, res) => {
 	}
 };
 
-// TODO: Пролучить все треки
+/**
+ * Get all tracks
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const getAllTracks = async (req, res) => {
 	try {
 		const tracks = await Track.find();
@@ -40,7 +48,11 @@ export const getAllTracks = async (req, res) => {
 	}
 };
 
-// TODO: Получить трек по id
+/**
+ * Get track by id
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const getTrack = async (req, res) => {
 	const track = await Track.findOne({ _id: req.params.id });
 
@@ -51,7 +63,11 @@ export const getTrack = async (req, res) => {
 	}
 };
 
-// TODO: Удалить трек по id
+/**
+ * Remove track
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const deleteTrack = async (req, res) => {
 	try {
 		await Track.remove({ _id: req.params.id });
@@ -63,7 +79,11 @@ export const deleteTrack = async (req, res) => {
 	}
 };
 
-// TODO: Изменить трек
+/**
+ * Update track
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const editTrack = async (req, res) => {
 	try {
 		const updateProps = {};

@@ -1,5 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
+/**
+ * User model
+ */
 const userSchema = new Schema({
 	_id: mongoose.Schema.Types.ObjectId,
 	email: {
