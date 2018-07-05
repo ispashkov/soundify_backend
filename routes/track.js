@@ -1,34 +1,41 @@
 import { Router } from 'express';
-import upath from 'upath';
-import multer from 'multer';
-import transliter from 'translitit-cyrillic-russian-to-latin';
 import passport from 'passport';
+import upload from '../middlewares/upload';
+import * as TrackController from '../controllers/track';
 
 const router = new Router();
 
-const storage = multer.diskStorage({
-	destination: function(req, file, cb) {
-		cb(null, upath.normalize('uploads/'));
-	},
-	filename: function(req, file, cb) {
-		cb(null, transliter(file.originalname).replace(/\s/gi, '_'));
-	}
-});
+/**
+ * @description Create new Track
+ * @method POST
+ */
+router.post('/', upload.single('photo'), TrackController.create);
 
-const upload = multer({ storage });
+/**
+ * @description Get all tracks
+ * @method GET
+ */
+router.get('/', passport.authenticate('jwt', { session: false }), TrackController.getAll);
 
-import {
-	addTrack,
-	getAllTracks,
-	getTrack,
-	deleteTrack,
-	editTrack
-} from '../controllers/track';
+/**
+ * @description Get single Track
+ * @method GET
+ * @param id
+ */
+router.get('/:id', TrackController.get);
 
-router.post('/', upload.single('photo'), addTrack); // TODO: Добавить новый трек
-router.get('/', passport.authenticate('jwt', { session: false }), getAllTracks); // TODO: Пролучить все треки
-router.put('/:id', editTrack); // TODO: Изменить трек
-router.get('/:id', getTrack); // TODO: Получить трек по id
-router.delete('/:id', deleteTrack); // TODO: Удалить трек по id
+/**
+ * @description Update Track
+ * @method PATCH
+ * @param id
+ */
+router.patch('/:id', TrackController.update);
+
+/**
+ * @description Remove Track
+ * @method DELETE
+ * @param id
+ */
+router.delete('/:id', TrackController.remove); // TODO: Удалить трек по id
 
 export default router;

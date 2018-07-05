@@ -8,8 +8,16 @@ const albumSchema = new Schema({
 	name: { type: String, required: true },
 	type: { type: String, required: true },
 	artist: { type: String, required: true },
-	photo: { type: String, required: true }
-	// tracks: { type: Array, required: true }
+	photo: {
+		type: String,
+		required: true,
+		default: ''
+	},
+	tracks: {
+		type: Array,
+		required: true,
+		default: []
+	}
 });
 
 export default mongoose.model('Album', albumSchema);

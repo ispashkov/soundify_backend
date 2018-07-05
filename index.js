@@ -8,9 +8,10 @@ import path from 'path';
 import dotenv from 'dotenv';
 import passport from 'passport';
 import passportConfig from './middlewares/passport';
-import userRoutes from './routes/user';
+import authRoutes from './routes/auth';
 import trackRoutes from './routes/track';
 import albumRoutes from './routes/album';
+import fileRoutes from './routes/file'
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ mongoose
 			useMongoClient: true
 		}
 	)
-	.on('error', error => console.log('Connection Error!', error)); 
+	.on('error', error => console.log('Connection Error!', error));
 
 mongoose.Promise = global.Promise;
 
@@ -59,10 +60,11 @@ app.get('/', (req, res) => {
 	res.send('Soundify Backend');
 });
 
-app.use('/uploads/', express.static(path.join(__dirname, '../uploads/')));
-app.use('/user', userRoutes);
-app.use('/track', trackRoutes);
-app.use('/album', albumRoutes);
+app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
+app.use('/auth', authRoutes);
+app.use('/tracks', trackRoutes);
+app.use('/albums', albumRoutes);
+app.use('/file', fileRoutes);
 
 app.use((req, res, next) => {
 	const error = new Error('Not found');

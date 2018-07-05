@@ -5,11 +5,11 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user';
 
 /**
- * Registration
+ * @description Registration
  * @param {*} req 
  * @param {*} res 
  */
-export const userSignup = (req, res) => {
+export const signup = (req, res) => {
 	const { email, password } = req.body;
 
 	User.find({ email }).then(user => {
@@ -49,11 +49,11 @@ export const userSignup = (req, res) => {
 };
 
 /**
- * Login
+ * @description Login
  * @param {*} req 
  * @param {*} res 
  */
-export const userLogin = async (req, res) => {
+export const login = async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
@@ -104,11 +104,11 @@ export const userLogin = async (req, res) => {
 };
 
 /**
- * Delete user
+ * @description Delete user
  * @param {*} req 
  * @param {*} res 
  */
-export const userDelete = async (req, res) => {
+export const remove = async (req, res) => {
 	try {
 		User.remove({ id: req.params.id });
 		res.status(200).json({
@@ -122,11 +122,11 @@ export const userDelete = async (req, res) => {
 };
 
 /**
- * Get current user
+ * @description Get current user
  * @param {*} req 
  * @param {*} res 
  */
-export const userCurrent = (req, res) => {
+export const current = (req, res) => {
 	res.json({
 		id: req.user._id,
 		email: req.user.email,

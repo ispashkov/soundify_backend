@@ -1,22 +1,26 @@
 import mongoose from 'mongoose';
-import transliter from 'translitit-cyrillic-russian-to-latin';
-
 import Album from '../models/album';
 
 /**
- * Create new album
+ * @description Create new Album
  * @param {*} req 
  * @param {*} res 
  */
-export const createAlbum = async (req, res) => {
-	const host = req.headers.host;
+export const create = async (req, res) => {
+	let photo, tracks;
+
+	if(req.files.photo && req.files.tracks) {
+		photo = await req.files.photo[0];
+		tracks = await req.files.tracks.map(track => track.path = `/${track.path}`);
+	}
+
 	const album = new Album({
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
 		type: req.body.type,
 		artist: req.body.name,
-		photo: `http://${host}/${req.file.destination +
-			transliter(req.file.originalname).replace(/\s/gi, '_')}`
+		photo: `/${photo.path}`,
+		tracks
 	});
 
 	try {
@@ -31,11 +35,11 @@ export const createAlbum = async (req, res) => {
 };
 
 /**
- * Get all albums
+ * @description Get all albums
  * @param {*} req 
  * @param {*} res 
  */
-export const getAlbums = async (req, res) => {
+export const getAll = async (req, res) => {
 	const albums = await Album.find();
 
 	try {
