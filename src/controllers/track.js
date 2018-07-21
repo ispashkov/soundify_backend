@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
-import transliter from 'translitit-cyrillic-russian-to-latin';
-import Track from '../models/track';
+import Track from '@/models/track';
 
 /**
  * @description Create new track
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const create = async (req, res) => {
 	const track = new Track({
@@ -29,8 +28,8 @@ export const create = async (req, res) => {
 
 /**
  * @description Get all tracks
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const getAll = async (req, res) => {
 	try {
@@ -47,8 +46,8 @@ export const getAll = async (req, res) => {
 
 /**
  * Get track by id
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const get = async (req, res) => {
 	const track = await Track.findOne({ _id: req.params.id });
@@ -62,8 +61,8 @@ export const get = async (req, res) => {
 
 /**
  * @description Remove track
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const remove = async (req, res) => {
 	try {
@@ -78,8 +77,8 @@ export const remove = async (req, res) => {
 
 /**
  * @description Update track
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const update = async (req, res) => {
 	try {

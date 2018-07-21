@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
-import upload from '../middlewares/upload';
-import * as AlbumController from '../controllers/album';
+import upload from '@/middlewares/upload';
+import * as AlbumController from '@/controllers/album';
 
 const router = new Router();
 

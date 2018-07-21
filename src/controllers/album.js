@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import Album from '../models/album';
+import Album from '@/models/album';
 
 /**
  * @description Create new Album
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const create = async (req, res) => {
 	let photo, tracks;
@@ -36,8 +36,8 @@ export const create = async (req, res) => {
 
 /**
  * @description Get all albums
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const getAll = async (req, res) => {
 	const albums = await Album.find();

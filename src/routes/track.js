@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
-import upload from '../middlewares/upload';
-import * as TrackController from '../controllers/track';
+import upload from '@/middlewares/upload';
+import * as TrackController from '@/controllers/track';
 
 const router = new Router();
 

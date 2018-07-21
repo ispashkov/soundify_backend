@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import User from '../models/user';
+import User from '@/models/user';
 
 /**
  * @description Registration
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const signup = (req, res) => {
 	const { email, password } = req.body;
@@ -50,8 +50,8 @@ export const signup = (req, res) => {
 
 /**
  * @description Login
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const login = async (req, res) => {
 	const { email, password } = req.body;
@@ -105,8 +105,8 @@ export const login = async (req, res) => {
 
 /**
  * @description Delete user
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const remove = async (req, res) => {
 	try {
@@ -123,8 +123,8 @@ export const remove = async (req, res) => {
 
 /**
  * @description Get current user
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 export const current = (req, res) => {
 	res.json({

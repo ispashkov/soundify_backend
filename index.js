@@ -7,27 +7,21 @@ import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
 import passport from 'passport';
-import passportConfig from './middlewares/passport';
-import authRoutes from './routes/auth';
-import trackRoutes from './routes/track';
-import albumRoutes from './routes/album';
-import fileRoutes from './routes/file'
+import passportConfig from '@/middlewares/passport';
+import authRoutes from '@/routes/auth';
+import trackRoutes from '@/routes/track';
+import albumRoutes from '@/routes/album';
+import fileRoutes from '@/routes/file';
 
 dotenv.config();
 
-mongoose
-	.connect(
-		`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PSWD}@ds018708.mlab.com:18708/soundify`,
-		{
-			useMongoClient: true
-		}
-	)
-	.on('error', error => console.log('Connection Error!', error));
+mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PSWD}@ds018708.mlab.com:18708/soundify`, {
+	useNewUrlParser: true
+});
 
 mongoose.Promise = global.Promise;
 
 const app = express();
-
 const PORT = process.env.PORT || 8080;
 
 //Middlewares
@@ -43,6 +37,9 @@ app.use(passport.initialize());
 //Passport config
 passportConfig(passport);
 
+/**
+ * Set Request Headers
+ */
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header(
@@ -60,18 +57,24 @@ app.get('/', (req, res) => {
 	res.send('Soundify Backend');
 });
 
-app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
+app.use('/uploads/', express.static(path.resolve('uploads')));
 app.use('/auth', authRoutes);
 app.use('/tracks', trackRoutes);
 app.use('/albums', albumRoutes);
 app.use('/file', fileRoutes);
 
+/**
+ * 404 Handler
+ */
 app.use((req, res, next) => {
 	const error = new Error('Not found');
 	error.status = 404;
 	next(error);
 });
 
+/**
+ * Errors handler
+ */
 app.use((error, req, res) => {
 	res.status(error.status || 500);
 	res.json({
@@ -79,7 +82,9 @@ app.use((error, req, res) => {
 	});
 });
 
-// handling 404 errors
+/**
+ * Response format
+ */
 app.use((err, req, res, next) => {
 	if (err.status !== 404) {
 		return next();
