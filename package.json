@@ -5,7 +5,9 @@
 	"main": "src/index.js",
 	"scripts": {
 		"dev": "nodemon --watch ./ --exec babel-node -- index.js",
-		"start": "babel-node index.js"
+		"start": "babel-node index.js",
+    "lint": "eslint --ext .js src --fix",
+    "precommit": "yarn lint"
 	},
 	"author": "Ilya Pashkov",
 	"license": "ISC",
@@ -21,6 +23,7 @@
 		"eslint-config-prettier": "^2.7.0",
 		"eslint-loader": "^2.0.0",
 		"eslint-plugin-prettier": "^2.3.1",
+		"hasky": "^3.0.2",
 		"nodemon": "^1.18.3",
 		"prettier": "^1.9.2",
 		"query-string": "^6.1.0"
