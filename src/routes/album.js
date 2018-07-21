@@ -8,7 +8,7 @@ const router = new Router();
 const fields = [
 	{ name: 'photo', maxCount: 1 },
 	{ name: 'tracks', maxCount: 20 }
-]
+];
 
 /**
  * @description Create new Album

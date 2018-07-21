@@ -103,4 +103,7 @@ app.use((err, req, res, next) => {
 	res.type('txt').send(err.message);
 });
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+app.listen(PORT, () => {
+	/* eslint-disable no-console */
+	console.log(`Server listening on port ${PORT}`)
+});

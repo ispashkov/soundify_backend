@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "nodemon --watch ./ --exec babel-node -- index.js",
 		"start": "babel-node index.js",
-    "lint": "eslint --ext .js src --fix",
+    "lint": "eslint index.js src --fix",
     "precommit": "yarn lint"
 	},
 	"author": "Ilya Pashkov",
