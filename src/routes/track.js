@@ -40,6 +40,6 @@ router.patch("/:id", upload.single("cover"), TrackController.update);
  * @method DELETE
  * @param id
  */
-router.delete("/:id", TrackController.remove); // TODO: Удалить трек по id
+router.delete("/:id", TrackController.remove);
 
 export default router;

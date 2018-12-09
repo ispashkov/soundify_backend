@@ -3,7 +3,7 @@ import User from "@/models/user";
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: "secret"
+  secretOrKey: process.env.JWT_KEY
 };
 
 export default passport => {
