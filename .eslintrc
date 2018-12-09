@@ -5,13 +5,13 @@
     "browser": false,
     "node": true
   },
-  "extends": ["prettier", "eslint:recommended"],
-  "plugins": ["prettier"],
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "rules": {
+    "prettier/prettier": "error",
     "no-console": ["warn"],
-    "indent": ["warn", "tab"],
+    "indent": ["warn", 2],
     "linebreak-style": ["warn", "unix"],
-    "quotes": ["warn", "single"],
+    "quotes": ["warn", "double"],
     "semi": ["warn", "always"],
     "object-curly-spacing": ["error", "always"],
     "no-unused-vars": [

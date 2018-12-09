@@ -1,13 +1,15 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from "mongoose";
 
 /**
  * Track model
  */
-const trackSchema = new Schema({
-	_id: mongoose.Schema.Types.ObjectId,
-	name: { type: String, required: true },
-	artist: { type: String, required: true },
-	photo: { type: String, required: true }
+const trackSchema = Schema({
+  name: { type: String, required: true },
+  artist_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  cover: { type: String, required: true },
+  explicit: { type: Boolean, default: false },
+  isFeature: { type: Boolean, default: false },
+  featureArtists: { type: Array }
 });
 
-export default mongoose.model('Track', trackSchema);
+export default model("Track", trackSchema);

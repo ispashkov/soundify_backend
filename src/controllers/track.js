@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
-import Track from '@/models/track';
+import Track from "@/models/track";
+import User from "@/models/user";
+import { ROLE_ARTIST } from "@/constants/roles";
 
 /**
  * @description Create new track
@@ -7,23 +8,33 @@ import Track from '@/models/track';
  * @param {*} res
  */
 export const create = async (req, res) => {
-	const track = new Track({
-		_id: new mongoose.Types.ObjectId(),
-		name: req.body.name,
-		artist: req.body.artist,
-		photo: `/${req.file.path}`
-	});
+  try {
+    const { name, artist_id } = req.body;
 
-	try {
-		const response = await track.save();
+    const user = await User.findById(artist_id);
+    const isArtist = user.role === ROLE_ARTIST;
 
-		res.status(200).json({
-			message: 'New track has been added',
-			track: response
-		});
-	} catch (error) {
-		res.status(500).json({ error });
-	}
+    if (isArtist) {
+      const track = new Track({
+        name,
+        artist_id,
+        cover: `/${req.file.path}`
+      });
+
+      const response = await track.save();
+
+      res.status(200).json({
+        message: "New track has been added",
+        track: response
+      });
+    } else {
+      res.status(403).json({
+        message: "Only an artist can add a track."
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 /**
@@ -32,16 +43,16 @@ export const create = async (req, res) => {
  * @param {*} res
  */
 export const getAll = async (req, res) => {
-	try {
-		const tracks = await Track.find();
+  try {
+    const tracks = await Track.find();
 
-		res.status(200).json({
-			count: tracks.length,
-			tracks
-		});
-	} catch (error) {
-		res.status(500).json({ error });
-	}
+    res.status(200).json({
+      count: tracks.length,
+      tracks
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 /**
@@ -50,29 +61,13 @@ export const getAll = async (req, res) => {
  * @param {*} res
  */
 export const get = async (req, res) => {
-	const track = await Track.findOne({ _id: req.params.id });
+  const track = await Track.findById(req.params.id);
 
-	try {
-		res.status(200).json(track);
-	} catch (error) {
-		res.status(500).json({ error });
-	}
-};
-
-/**
- * @description Remove track
- * @param {*} req
- * @param {*} res
- */
-export const remove = async (req, res) => {
-	try {
-		await Track.remove({ _id: req.params.id });
-		res.status(200).json({
-			message: 'Track deleted'
-		});
-	} catch (error) {
-		res.status(500).json({ error });
-	}
+  try {
+    res.status(200).json(track);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 /**
@@ -81,19 +76,54 @@ export const remove = async (req, res) => {
  * @param {*} res
  */
 export const update = async (req, res) => {
-	try {
-		const updateProps = {};
+  try {
+    const { artist_id } = req.body;
+    const user = await User.findById(artist_id);
+    const isArtist = user.role === ROLE_ARTIST;
 
-		for (let prop of req.body) {
-			updateProps[prop.propName] = prop.value;
-		}
+    if (isArtist) {
+      const updateProps = {};
 
-		await Track.update({ _id: req.params.id }, { $set: updateProps });
+      for (const [key, value] of Object.entries(req.body)) {
+        updateProps[key] = value;
+      }
 
-		res.status(200).json({
-			message: 'Track updated'
-		});
-	} catch (error) {
-		res.status(500).json({ error });
-	}
+      updateProps["cover"] = `/${req.file.path}`;
+
+      const updatedTrack = await Track.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: updateProps
+        },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: "Track updated",
+        data: updatedTrack
+      });
+    } else {
+      res.status(403).json({
+        message: "Only an artist can update a track."
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+/**
+ * @description Remove track
+ * @param {*} req
+ * @param {*} res
+ */
+export const remove = async (req, res) => {
+  try {
+    await Track.findByIdAndRemove(req.params.id);
+    res.status(200).json({
+      message: "Track deleted"
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };

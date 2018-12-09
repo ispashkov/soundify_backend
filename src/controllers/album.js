@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import Album from '@/models/album';
+import Album from "@/models/album";
 
 /**
  * @description Create new Album
@@ -7,31 +6,32 @@ import Album from '@/models/album';
  * @param {*} res
  */
 export const create = async (req, res) => {
-	let photo, tracks;
+  let photo, tracks;
 
-	if(req.files.photo && req.files.tracks) {
-		photo = await req.files.photo[0];
-		tracks = await req.files.tracks.map(track => track.path = `/${track.path}`);
-	}
+  if (req.files.photo && req.files.tracks) {
+    photo = await req.files.photo[0];
+    tracks = await req.files.tracks.map(
+      track => (track.path = `/${track.path}`)
+    );
+  }
 
-	const album = new Album({
-		_id: new mongoose.Types.ObjectId(),
-		name: req.body.name,
-		type: req.body.type,
-		artist: req.body.name,
-		photo: `/${photo.path}`,
-		tracks
-	});
+  const album = new Album({
+    name: req.body.name,
+    type: req.body.type,
+    artist: req.body.name,
+    photo: `/${photo.path}`,
+    tracks
+  });
 
-	try {
-		const response = await album.save();
-		res.status(200).json({
-			message: 'New album has been created',
-			album: response
-		});
-	} catch (error) {
-		res.status(500).json({ error });
-	}
+  try {
+    const response = await album.save();
+    res.status(200).json({
+      message: "New album has been created",
+      album: response
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 /**
@@ -40,14 +40,14 @@ export const create = async (req, res) => {
  * @param {*} res
  */
 export const getAll = async (req, res) => {
-	const albums = await Album.find();
+  const albums = await Album.find();
 
-	try {
-		res.status(200).json({
-			count: albums.length,
-			albums
-		});
-	} catch (error) {
-		res.status(500).json({ error });
-	}
+  try {
+    res.status(200).json({
+      count: albums.length,
+      albums
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };

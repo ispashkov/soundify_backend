@@ -1,51 +1,57 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-import User from '@/models/user';
+import User from "@/models/user";
 
 /**
  * @description Registration
  * @param {*} req
  * @param {*} res
  */
-export const signup = (req, res) => {
-	const { email, password } = req.body;
+export const signup = async (req, res) => {
+  try {
+    const { email, password, role, firstName, secondName } = req.body;
 
-	User.find({ email }).then(user => {
-		if (user.length >= 1) {
-			return res.status(409).json({
-				message: 'Mail exists'
-			});
-		} else {
-			bcrypt.hash(password, 10, (err, hash) => {
-				if (err) {
-					return res.status(500).json({
-						error: err
-					});
-				} else {
-					const user = new User({
-						_id: new mongoose.Types.ObjectId(),
-						email: email,
-						password: hash
-					});
+    const user = await User.find({ email });
 
-					user
-						.save()
-						.then(() => {
-							res.status(201).json({
-								message: 'User created'
-							});
-						})
-						.catch(err => {
-							res.status(500).json({
-								error: err
-							});
-						});
-				}
-			});
-		}
-	});
+    if (user.length >= 1) {
+      return res.status(409).json({
+        message: "Mail exists"
+      });
+    } else {
+      bcrypt.hash(password, 10, async (error, hash) => {
+        try {
+          if (error) {
+            return res.status(500).json({
+              error
+            });
+          } else {
+            const newUser = new User({
+              email,
+              password: hash,
+              role,
+              firstName,
+              secondName
+            });
+
+            const createdUser = await newUser.save();
+            createdUser.password = null;
+
+            res.status(201).json({
+              message: "User created",
+              data: createdUser
+            });
+          }
+        } catch (error) {
+          res.status(500).json({
+            error
+          });
+        }
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**
@@ -54,53 +60,49 @@ export const signup = (req, res) => {
  * @param {*} res
  */
 export const login = async (req, res) => {
-	const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-	try {
-		const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
 
-		if (!user) {
-			throw new Error('User not found');
-		}
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-		bcrypt.compare(password, user.password).then(isMatch => {
-			if (isMatch) {
-				//User Matched
+    const isMatch = await bcrypt.compare(password, user.password);
 
-				const payload = {
-					id: user._id,
-					email: user.email
-				};
+    if (isMatch) {
+      const payload = {
+        id: user._id,
+        email: user.email
+      };
 
-				jwt.sign(
-					payload,
-					process.env.JWT_KEY,
-					{
-						expiresIn: '1h'
-					},
-					(err, token) => {
-						res.status(200).json({
-							message: 'Auth successful',
-							token: `Bearer ${token}`,
-							user: {
-								id: user._id,
-								email: user.email,
-								admin: user.admin
-							}
-						});
-					}
-				);
-			} else {
-				res.status(400).json({
-					error: 'Password incorrect'
-				});
-			}
-		});
-	} catch (err) {
-		res.status(404).json({
-			error: err.message
-		});
-	}
+      jwt.sign(
+        payload,
+        process.env.JWT_KEY,
+        {
+          expiresIn: "1h"
+        },
+        (err, token) => {
+          user.password = null;
+
+          res.status(200).json({
+            message: "Auth successful",
+            token,
+            user
+          });
+        }
+      );
+    } else {
+      res.status(400).json({
+        error: "Password incorrect"
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      error: err.message
+    });
+  }
 };
 
 /**
@@ -109,16 +111,16 @@ export const login = async (req, res) => {
  * @param {*} res
  */
 export const remove = async (req, res) => {
-	try {
-		User.remove({ id: req.params.id });
-		res.status(200).json({
-			message: 'User deleted'
-		});
-	} catch (err) {
-		res.status(500).json({
-			error: err
-		});
-	}
+  try {
+    User.remove({ id: req.params.id });
+    res.status(200).json({
+      message: "User deleted"
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err
+    });
+  }
 };
 
 /**
@@ -126,10 +128,4 @@ export const remove = async (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-export const current = (req, res) => {
-	res.json({
-		id: req.user._id,
-		email: req.user.email,
-		admin: req.user.admin
-	});
-};
+export const current = (req, res) => res.json({ ...req.user, password: null });
