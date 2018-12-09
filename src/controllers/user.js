@@ -49,8 +49,10 @@ export const signup = async (req, res) => {
         }
       });
     }
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    res.status(500).json({
+      error
+    });
   }
 };
 
