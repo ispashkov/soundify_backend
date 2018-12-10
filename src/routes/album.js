@@ -5,19 +5,14 @@ import * as AlbumController from "@/controllers/album";
 
 const router = new Router();
 
-const fields = [
-  { name: "photo", maxCount: 1 },
-  { name: "tracks", maxCount: 20 }
-];
-
 /**
  * @description Create new Album
  * @method POST
  */
 router.post(
-  "/create",
-  passport.authenticate("jwt", { session: false }),
-  upload.fields(fields),
+  "/",
+  // passport.authenticate("jwt", { session: false }),
+  upload.single("cover"),
   AlbumController.create
 );
 

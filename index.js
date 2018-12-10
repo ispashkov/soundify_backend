@@ -13,7 +13,7 @@ import trackRoutes from "@/routes/track";
 import albumRoutes from "@/routes/album";
 import fileRoutes from "@/routes/file";
 
-dotenv.config();
+dotenv.load();
 
 mongoose.connect(
   `mongodb://${process.env.MONGODB_USER}:${

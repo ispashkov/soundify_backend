@@ -14,8 +14,10 @@ const userSchema = Schema({
   password: { type: String, required: true, select: false },
   firstName: { type: String, default: null },
   lastName: { type: String, default: null },
-  favoriteSongs: { type: Array },
-  role: { type: Number, required: true, default: ROLE_USER }
+  favoriteSongs: [{ type: Schema.Types.ObjectId, ref: "Track" }],
+  role: { type: Number, required: true, default: ROLE_USER },
+  albums: [{ type: Schema.Types.ObjectId, ref: "Album" }],
+  tracks: [{ type: Schema.Types.ObjectId, ref: "Track" }]
 });
 
 export default model("User", userSchema);

@@ -1,22 +1,18 @@
 import { Schema, model } from "mongoose";
+import { SINGLE } from "@/constants/albumTypes";
 
 /**
  * Album model
  */
-const albumSchema = new Schema({
+const albumSchema = Schema({
   name: { type: String, required: true },
-  type: { type: String, required: true },
-  artist: { type: String, required: true },
-  photo: {
-    type: String,
-    required: true,
-    default: ""
-  },
-  tracks: {
-    type: Array,
-    required: true,
-    default: []
-  }
+  description: { type: String, default: null },
+  type: { type: Number, default: SINGLE },
+  artist: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  cover: { type: String, required: false },
+  tracks: [{ type: Schema.Types.ObjectId, ref: "Track" }],
+  published: { type: Boolean, default: true },
+  publishedAt: { type: Date, default: null }
 });
 
 export default model("Album", albumSchema);

@@ -9,23 +9,29 @@ import { ROLE_ARTIST } from "@/constants/roles";
  */
 export const create = async (req, res) => {
   try {
-    const { name, artist_id } = req.body;
+    const { name, artist } = req.body;
 
-    const user = await User.findById(artist_id);
+    const user = await User.findById(artist);
     const isArtist = user.role === ROLE_ARTIST;
 
     if (isArtist) {
       const track = new Track({
         name,
-        artist_id,
+        artist,
         cover: `/${req.file.path}`
       });
 
-      const response = await track.save();
+      const savedTrack = await track.save();
+
+      await User.findByIdAndUpdate(user._id, {
+        $set: {
+          tracks: [...user.tracks, savedTrack._id]
+        }
+      });
 
       res.status(200).json({
         message: "New track has been added",
-        track: response
+        track: savedTrack
       });
     } else {
       res.status(403).json({
@@ -44,7 +50,7 @@ export const create = async (req, res) => {
  */
 export const getAll = async (req, res) => {
   try {
-    const tracks = await Track.find();
+    const tracks = await Track.find().populate("artist");
 
     res.status(200).json({
       count: tracks.length,
@@ -61,7 +67,7 @@ export const getAll = async (req, res) => {
  * @param {*} res
  */
 export const get = async (req, res) => {
-  const track = await Track.findById(req.params.id);
+  const track = await Track.findById(req.params.id).populate("artist");
 
   try {
     res.status(200).json(track);
@@ -77,8 +83,8 @@ export const get = async (req, res) => {
  */
 export const update = async (req, res) => {
   try {
-    const { artist_id } = req.body;
-    const user = await User.findById(artist_id);
+    const { artist } = req.body;
+    const user = await User.findById(artist);
     const isArtist = user.role === ROLE_ARTIST;
 
     if (isArtist) {
@@ -119,7 +125,7 @@ export const update = async (req, res) => {
  */
 export const remove = async (req, res) => {
   try {
-    await Track.findByIdAndRemove(req.params.id);
+    await Track.findOneAndDelete({ _id: req.params.id });
     res.status(200).json({
       message: "Track deleted"
     });

@@ -10,7 +10,10 @@ const storage = multer.diskStorage({
   filename: function(req, file, cb) {
     cb(
       null,
-      `${moment()}_${transliter(file.originalname).replace(/\s/gi, "_")}`
+      `${moment().format()}_${transliter(file.originalname)}`.replace(
+        /\s/gi,
+        "_"
+      )
     );
   }
 });
