@@ -4,14 +4,14 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import cors from "cors";
-import path from "path";
 import dotenv from "dotenv";
 import passport from "passport";
 import passportConfig from "@/middlewares/passport";
-import authRoutes from "@/routes/auth";
-import trackRoutes from "@/routes/track";
-import albumRoutes from "@/routes/album";
-import fileRoutes from "@/routes/file";
+import routes from "@/routes";
+import headers from "@/utils/headers";
+import notFound from "@/utils/notFoundHandler";
+import errorHandler from "@/utils/errorHandler";
+import responseFormat from "@/utils/responseFormat";
 
 dotenv.load();
 
@@ -46,70 +46,30 @@ passportConfig(passport);
 /**
  * Set Request Headers
  */
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-    return res.status(200).json({});
-  }
-  next();
-});
+app.use(headers);
 
 app.get("/", (req, res) => {
   res.send("Soundify Backend");
 });
 
-app.use("/uploads/", express.static(path.resolve("uploads")));
-app.use("/auth", authRoutes);
-app.use("/tracks", trackRoutes);
-app.use("/albums", albumRoutes);
-app.use("/file", fileRoutes);
+/**
+ * Routing
+ */
+app.use(routes);
 
 /**
  * 404 Handler
  */
-app.use((req, res, next) => {
-  const error = new Error("Not found");
-  error.status = 404;
-  next(error);
-});
+app.use(notFound);
 
 /**
  * Errors handler
  */
-app.use((error, req, res) => {
-  res.status(error.status || 500);
-  res.json({
-    error
-  });
-});
+app.use(errorHandler);
 
 /**
  * Response format
  */
-app.use((err, req, res, next) => {
-  if (err.status !== 404) {
-    return next();
-  }
+app.use(responseFormat);
 
-  if (req.accepts("html")) {
-    return res.send(err.message);
-  }
-
-  // respond with json
-  if (req.accepts("json")) {
-    return res.json({ error: err.message });
-  }
-
-  // default to plain-text. send()
-  res.type("txt").send(err.message);
-});
-
-app.listen(PORT, () => {
-  /* eslint-disable no-console */
-  console.log(`Server listening on port ${PORT}`);
-});
+app.listen(PORT, console.log(`Server listening on port ${PORT}`));

@@ -1,7 +1,7 @@
 import { Router } from "express";
 // import passport from "passport";
 import upload from "@/middlewares/upload";
-import * as TrackController from "@/controllers/track";
+import * as TrackController from "@/controllers/tracks";
 
 const router = new Router();
 
@@ -26,7 +26,7 @@ router.get(
  * @method GET
  * @param id
  */
-router.get("/:id", TrackController.get);
+router.get("/:id", TrackController.getById);
 
 /**
  * @description Update Track
@@ -40,6 +40,6 @@ router.patch("/:id", upload.single("cover"), TrackController.update);
  * @method DELETE
  * @param id
  */
-router.delete("/:id", TrackController.remove);
+router.delete("/:id", TrackController.delete);
 
 export default router;
