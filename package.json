@@ -6,8 +6,12 @@
 	"scripts": {
 		"dev": "nodemon --watch ./ --exec babel-node -- index.js",
 		"start": "babel-node index.js",
-		"lint": "eslint index.js src --fix",
-		"precommit": "yarn lint"
+		"lint": "eslint index.js src --fix"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "yarn lint"
+		}
 	},
 	"author": "Ilya Pashkov",
 	"license": "ISC",
