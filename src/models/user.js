@@ -4,19 +4,22 @@ import { ROLE_USER } from "@/constants/roles";
 /**
  * User model
  */
-const userSchema = Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+const userSchema = Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    },
+    password: { type: String, required: true, select: false },
+    userName: { type: String, default: null },
+    favoriteSongs: [{ type: Schema.Types.ObjectId, ref: "Track" }],
+    role: { type: Number, required: true, default: ROLE_USER },
+    albums: [{ type: Schema.Types.ObjectId, ref: "Album" }],
+    tracks: [{ type: Schema.Types.ObjectId, ref: "Track" }]
   },
-  password: { type: String, required: true, select: false },
-  userName: { type: String, default: null },
-  favoriteSongs: [{ type: Schema.Types.ObjectId, ref: "Track" }],
-  role: { type: Number, required: true, default: ROLE_USER },
-  albums: [{ type: Schema.Types.ObjectId, ref: "Album" }],
-  tracks: [{ type: Schema.Types.ObjectId, ref: "Track" }]
-});
+  { timestamps: true }
+);
 
 export default model("User", userSchema);
